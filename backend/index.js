@@ -8,9 +8,10 @@ const app = express();
 app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGO_URL)
+mongoose
+  .connect(process.env.MONGO_URL)
   .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
 app.get('/', (req, res) => res.send('Backend is up'));
 
