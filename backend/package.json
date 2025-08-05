@@ -8,5 +8,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@langchain/openai": "^0.6.3",
+    "@pinecone-database/pinecone": "^6.1.2",
+    "express-rate-limit": "^8.0.1",
+    "gpt-tokenizer": "^3.0.1",
+    "openai": "^5.11.0"
+  }
 }
