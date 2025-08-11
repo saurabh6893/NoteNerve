@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+backend/uploads/
+test.pdf
+
 
 # Editor directories and files
 .vscode/*
