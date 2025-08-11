@@ -30,6 +30,9 @@ const chatRoutes = require('./routes/chatRoutes.js');
 
 app.use('/api/chat', chatRoutes);
 
+const pdfRoutes = require('./routes/pdfRoutes.js');
+app.use('/api/pdf', pdfRoutes);
+
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log('✅ MongoDB connected'))
