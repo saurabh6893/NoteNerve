@@ -26,6 +26,10 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+const chatRoutes = require('./routes/chatRoutes.js');
+
+app.use('/api/chat', chatRoutes);
+
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log('✅ MongoDB connected'))
