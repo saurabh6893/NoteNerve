@@ -7,7 +7,11 @@ interface UploadResult {
   error?: string;
 }
 
-const PDFUpload: React.FC = () => {
+interface PDFUploadProps {
+  onUploadSuccess: (path: string) => void;
+}
+
+const PDFUpload: React.FC<PDFUploadProps> = ({ onUploadSuccess }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>(
     'idle',
@@ -49,6 +53,7 @@ const PDFUpload: React.FC = () => {
           filename: result.filename,
           path: result.path,
         });
+        onUploadSuccess(result.path);
       } else {
         setUploadStatus('error');
         setUploadResult({
