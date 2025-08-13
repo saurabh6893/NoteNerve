@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-// Serve worker from public folder
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
 interface PDFViewerProps {
@@ -22,8 +21,15 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ filePath }) => {
         onLoadSuccess={onDocumentLoadSuccess}
         loading={<p className="text-gray-500">Loading PDF…</p>}
       >
-        {Array.from(new Array(numPages), (_el, index) => (
-          <Page key={`page_${index + 1}`} pageNumber={index + 1} width={600} loading="" />
+        {Array.from({ length: numPages }, (_el, index) => (
+          <Page
+            key={`page_${index + 1}`}
+            pageNumber={index + 1}
+            scale={Math.min(2, (window.devicePixelRatio || 1) * 1.25)}
+            renderTextLayer
+            renderAnnotationLayer={false}
+            loading=""
+          />
         ))}
       </Document>
     </div>

@@ -10,6 +10,7 @@ const App = () => {
   useEffect(() => {
     getBackendHealth().then(setMessage);
   }, []);
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   return (
     <div>
@@ -17,7 +18,8 @@ const App = () => {
       <p>Backend health: {message}</p>
       <PDFUpload onUploadSuccess={(path) => setUploadedPath(path)} />
 
-      {uploadedPath && <PDFViewer filePath={uploadedPath} />}
+      {uploadedPath && <PDFViewer filePath={`${API_BASE}${uploadedPath}`} />}
+
       <ChatInterface />
     </div>
   );

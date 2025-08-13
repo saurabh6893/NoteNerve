@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-
+const path = require('path');
 const app = express();
 
 const allowedOrigins = ['http://localhost:5173', 'https://notenerve.onrender.com'];
@@ -23,6 +23,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.json());
 
