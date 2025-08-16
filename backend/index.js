@@ -25,10 +25,18 @@ app.use((req, res, next) => {
 });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(
+  '/pdf.worker.js',
+  express.static(path.join(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.js')),
+);
 
 app.use(express.json());
 
 const chatRoutes = require('./routes/chatRoutes.js');
+app.use(
+  '/pdf.worker.js',
+  express.static(path.join(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.js')),
+);
 
 app.use('/api/chat', chatRoutes);
 
