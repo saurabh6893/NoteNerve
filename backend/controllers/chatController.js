@@ -5,16 +5,10 @@ const getChatHistory = async (req, res) => {
     const { sessionId = 'default' } = req.query;
     const messages = await Chat.find({ sessionId }).sort({ timestamp: 1 }).limit(50);
 
-    res.json({
-      success: true,
-      messages: messages,
-    });
+    res.json({ success: true, messages });
   } catch (error) {
     console.error('Error fetching chat history:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch chat history',
-    });
+    res.status(500).json({ success: false, error: 'Failed to fetch chat history' });
   }
 };
 
@@ -23,16 +17,10 @@ const clearChatHistory = async (req, res) => {
     const { sessionId = 'default' } = req.query;
     await Chat.deleteMany({ sessionId });
 
-    res.json({
-      success: true,
-      message: 'Chat history cleared',
-    });
+    res.json({ success: true, message: 'Chat history cleared' });
   } catch (error) {
     console.error('Error clearing chat history:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to clear chat history',
-    });
+    res.status(500).json({ success: false, error: 'Failed to clear chat history' });
   }
 };
 
@@ -40,12 +28,10 @@ const sendMessage = async (req, res) => {
   try {
     const { message, sessionId = 'default' } = req.body;
     if (!message || !message.trim()) {
-      return res.status(400).json({
-        success: false,
-        error: 'Message is Required',
-      });
+      return res.status(400).json({ success: false, error: 'Message is Required' });
     }
 
+    // Save the user message
     const userMessage = new Chat({
       user: 'user',
       message: message.trim(),
@@ -53,27 +39,34 @@ const sendMessage = async (req, res) => {
     });
     await userMessage.save();
 
-    const aiResponse = `Echo : ${message.trim()}`;
+    // Call AI service with nested try/catch
+    const { getAIResponse } = require('../services/aiService');
+    let aiReply;
+    try {
+      aiReply = await getAIResponse(message.trim());
+    } catch (aiError) {
+      console.error('OpenAI error:', aiError);
+      return res.status(500).json({ success: false, error: 'AI service error' });
+    }
 
+    // Save the assistant message
     const assistantMessage = new Chat({
       user: 'assistant',
-      message: aiResponse,
+      message: aiReply,
       sessionId,
     });
     await assistantMessage.save();
 
+    // Respond with both messages and the AI reply
     res.json({
       success: true,
       userMessage,
       assistantMessage,
-      reply: aiResponse,
+      reply: aiReply,
     });
   } catch (error) {
     console.error('Error sending message:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to send message',
-    });
+    res.status(500).json({ success: false, error: 'Failed to send message' });
   }
 };
 

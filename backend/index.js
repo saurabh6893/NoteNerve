@@ -34,7 +34,6 @@ app.use(express.json());
 
 const chatRoutes = require('./routes/chatRoutes.js');
 
-
 app.use('/api/chat', chatRoutes);
 
 const pdfRoutes = require('./routes/pdfRoutes.js');
