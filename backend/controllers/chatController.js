@@ -1,4 +1,6 @@
 const Chat = require('../models/Chat.js');
+const PDFDocument = require('../models/PDFDocument.js');
+const { findRelevantPages } = require('../services/pdfSearchService');
 
 const getChatHistory = async (req, res) => {
   try {
@@ -49,6 +51,12 @@ const sendMessage = async (req, res) => {
       return res.status(500).json({ success: false, error: 'AI service error' });
     }
 
+    let citations = [];
+    const latestDoc = await PDFDocument.findOne({ sessionId }).sort({ createdAt: -1 });
+    if (latestDoc && Array.isArray(latestDoc.pageTexts)) {
+      citations = findRelevantPages(message.trim(), latestDoc.pageTexts, 3);
+    }
+
     // Save the assistant message
     const assistantMessage = new Chat({
       user: 'assistant',
@@ -63,6 +71,7 @@ const sendMessage = async (req, res) => {
       userMessage,
       assistantMessage,
       reply: aiReply,
+      citations,
     });
   } catch (error) {
     console.error('Error sending message:', error);
